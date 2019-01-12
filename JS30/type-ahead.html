@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Type Ahead 👀</title>
+    <link rel="stylesheet" href="type-ahead.css">
+</head>
+
+<body>
+    <form class="search-form">
+        <input type="text" class="search" placeholder="City or State">
+        <ul class="suggestions">
+            <li>Filter for a city</li>
+            <li>or a state</li>
+        </ul>
+    </form>
+    <script>
+        // constants
+        const log = console.log;
+        const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+        const suggestions = document.querySelector('.suggestions');
+        const placeholder = `
+            <li>Filter for a city</li>
+            <li>or a state</li>`;
+
+        // retrieve data once
+        const data = [];
+        fetch(endpoint)
+            .then(res => res.ok ? res.json() : new Error('Not 200 ok'))
+            .then(json => {
+                data.push(...json);
+                log('Size of data: ', data.length);
+                // searchAndDisplay(json, i.value);
+            })
+            .catch(error => log('Received error: ', error));
+
+        // configure listeners
+        document.querySelector('.search').addEventListener('keyup', event => {
+            const i = event.target;
+            log('Input: ', i.value);
+            if (!i.value || i.value === '') {
+                suggestions.innerHTML = placeholder;
+            } else {
+                searchAndDisplay(i.value);
+            }
+        });
+
+        // helper functions
+        function searchAndDisplay(search) {
+            const r = new RegExp(search, 'gi'); // global,insensitive
+            suggestions.innerHTML = data.filter(item => item.city.match(r) || item.state.match(r))
+                .map(item => `
+                    <li>
+                        <span class="name">${highlight(item.city, search)}, ${highlight(item.state, search)}</span>
+                        <span class="population">${Number(item.population).toLocaleString()}</span>
+                    </li>
+                `).join('');
+        }
+
+        function highlight(text, match) {
+            return text.replace(new RegExp(match, 'gi'), `<span class="hl">${match}</span>`);
+        }
+
+    </script>
+</body>
+
+</html>

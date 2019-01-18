@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=2.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>HTML5 Canvas</title>
+    <style>
+        canvas {
+            border: solid 2px black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas>
+        <h2>Fall Back Content</h2>
+        <p>You'll see this if your browser doesn't support canvases.</p>
+    </canvas>
+    <script>
+        const canvas = document.querySelector('canvas');
+        // checks for support
+        if (canvas.getContext) {
+            // full size canvas
+            canvas.width = window.innerWidth * 0.8;
+            canvas.height = window.innerHeight * 0.8;
+            const ctx = canvas.getContext('2d');
+            // line properties
+            ctx.strokeStyle = 'black';
+            // rounded line
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 30;
+            // keep track of cursor position
+            // toggle drawing mode based on mouse down
+            let [x, y, drawing] = [0, 0, false];
+            // drawing as you move
+            canvas.addEventListener('mousedown', () => {
+                // start from where mouse was clicked down instead of 0,0
+                [x, y, drawing] = [event.offsetX, event.offsetY, true];
+            });
+            canvas.addEventListener('mousemove', () => {
+                // only when left click is down
+                if (drawing) {
+                    // create line from previous x,y to where mouse moves to
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(event.offsetX, event.offsetY);
+                    // draw the line (fill in by stroke)
+                    ctx.stroke();
+                    // set new x,y
+                    [x, y] = [event.offsetX, event.offsetY];
+                }
+            });
+            // stop drawing when mouse moves out of bound or left click is released
+            canvas.addEventListener('mouseout', () => drawing = false);
+            canvas.addEventListener('mouseup', () => drawing = false);
+        }
+    </script>
+</body>
+
+</html>

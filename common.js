@@ -41,3 +41,7 @@ Name of global name: ${this.name}`);
 const person3 = new Person('Henry');
 Person.prototype.country = 'USA';
 console.log(`person1 lives in same country as person3: ${person1.country === person3.country}, which would be ${person1.country}.`);
+
+// Unicode characters
+// http://unicode.scarfboy.com
+console.log('Play symbol: \u25BA');

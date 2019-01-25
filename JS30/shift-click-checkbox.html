@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hold Shift to Check Multiple Checkboxes</title>
+</head>
+
+<body>
+    <style>
+
+        html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 400px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #F1F1F1;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    input:checked + p {
+      background: #F9F9F9;
+      text-decoration: line-through;
+    }
+
+    input[type="checkbox"] {
+      margin: 20px;
+    }
+
+    p {
+      margin: 0;
+      padding: 20px;
+      transition: background 0.2s;
+      flex: 1;
+      font-family:'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+      border-left: 1px solid #D1E2FF;
+    }
+  </style>
+    <!--
+   The following is a common layout you would see in an email client.
+
+   When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
+
+  -->
+    <div class="inbox">
+        <div class="item">
+            <input type="checkbox">
+            <p>This is an inbox layout.</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Check one item</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Hold down your Shift key</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Check a lower item</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Everything in between should also be set to checked</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Try to do it without any libraries</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Just regular JavaScript</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Good Luck!</p>
+        </div>
+        <div class="item">
+            <input type="checkbox">
+            <p>Don't forget to tweet your result!</p>
+        </div>
+    </div>
+
+    <script>
+        let lastCheckedIndex, shiftKeyDown;
+        const inbox = document.querySelector('.inbox');
+        let count = -1;
+        document.querySelectorAll('input[type=checkbox]').forEach(checkbox => {
+            // add index
+            checkbox.setAttribute('data-index', new String(++count));
+            // register callback
+            checkbox.addEventListener('input', event => {
+                let box = event.target;
+                if (!box.checked) return;
+                // only run code after when a box is checked
+                console.info(event);
+                let current = parseInt(box.getAttribute('data-index'));
+                let currentIndex = current;
+                // only check multiple boxes if shift key is held down
+                // check if last checked box is above or below current
+                if (shiftKeyDown && lastCheckedIndex !== undefined && Math.abs(currentIndex - lastCheckedIndex) > 1) {
+                    console.groupCollapsed('CheckingMultiple');
+                    console.info('Checking multiple boxes...');
+                    // loop through and check all boxes in between
+                    if (currentIndex > lastCheckedIndex) {
+                        while (--currentIndex > lastCheckedIndex) {
+                            inbox.children[currentIndex].children[0].checked = true;
+                        }
+                    } else {
+                        while (++currentIndex < lastCheckedIndex) {
+                            inbox.children[currentIndex].children[0].checked = true;
+                        }
+                    }
+                    console.groupEnd('CheckingMultiple');
+                }
+                // register as last checked
+                lastCheckedIndex = current;
+            });
+        });
+
+        // callback for shift key activation
+        document.addEventListener('keydown', event => { if (event.key === 'Shift') { shiftKeyDown = true; console.info('Shift pressed.') } });
+        document.addEventListener('keyup', event => { if (event.key === 'Shift') { shiftKeyDown = false; console.info('Shift released.') } });
+    </script>
+</body>
+
+</html>

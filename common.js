@@ -29,14 +29,30 @@ for (const arr of [arr1, arr2, arr3]) {
 }
 console.log({ original }, { arr1 }, { arr2 }, { arr3 }); // original intact while rest 5th item changed
 
+/***************************** Different ways to clone an object *****************************/
+// clone an object and assign it new fields
+const originalObj = {
+    name: 'William Luo',
+    sex: 'm',
+    age: 24
+};
+// NOTE: Object.assign only clones shallowly (e.g. 1-level deep)
+const newObj = Object.assign(
+    {}, // This can be a blank obj, contain properties, or any other obj.
+    originalObj,
+    {
+        email: 'gluo7777@gmail.com',
+        note2: 'Any other properties you want to keep adding'
+    }
+);
+console.log({ originalObj }, { newObj });
+
 /***************************** log both identifier and value *****************************/
 
 const myObj = true;
 console.log({ myObj });
 
-/***************************** Concepts *****************************/
-
-/* Using 'new' operator vs Function only */
+/***************************** Using 'new' operator vs Function only *****************************/
 let name = 'Bobby B';
 function Person(name) {
     this.name = name;
@@ -50,17 +66,17 @@ console.log(`Name of person1: ${person1.name}\n
 Name of person2: ${person2 === undefined ? 'person2 is undefined' : person2.name}\n
 Name of global name: ${this.name}`);
 
-/* Shared properties */
+/***************************** Shared properties *****************************/
 // accomplished via function's prototype property
 const person3 = new Person('Henry');
 Person.prototype.country = 'USA';
 console.log(`person1 lives in same country as person3: ${person1.country === person3.country}, which would be ${person1.country}.`);
 
-// Unicode characters
+/***************************** Unicode characters *****************************/
 // http://unicode.scarfboy.com
 console.log('Play symbol: \u25BA');
 
-// Closures
+/***************************** Closures *****************************/
 console.log('Closures');
 function func1(a, b) {
     var c = 10;
@@ -93,7 +109,7 @@ function f1(func) {
     };
 }
 
-//// Debounce
+/***************************** Debounce *****************************/
 // Debounce is a technique used to delay processing of UI Events
 // until necessary. The event handler is paused until an event has
 // stopped firing and a predetermined amount of wait time has elapsed

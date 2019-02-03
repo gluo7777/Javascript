@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Konami Code</title>
+    <style>
+        .correct {
+            color: green;
+        }
+
+        .wrong {
+            color: red;
+        }
+
+        .closer {
+            color: yellowgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Enter the correct sequence of inputs to reveal the hidden content!</h1>
+    <div id="secret"></div>
+    <script>
+        const sequence = [];
+        const secret = 'william';
+        const hidden = document.getElementById('secret');
+        window.addEventListener('keyup', e => {
+            hidden.innerHTML = '';
+            console.log('pressed: ', e.key);
+            sequence.push(e.key);
+            const s = sequence.join('');
+            if (secret === s) {
+                hidden.innerHTML = `\
+                    <h2 class="correct">Congratulations, "${secret}" was the correct code!</h2>\
+                `;
+                console.log('matched');
+                sequence.splice(0);
+            } else if (!secret.startsWith(s)) {
+                sequence.splice(0);
+                hidden.innerHTML = `\
+                <h2 class="wrong">Try again! "${e.key}" is not the next one!</h2>\
+                `;
+            } else {
+                hidden.innerHTML = `\
+                    <h2 class="closer">Yes! "${e.key}" was the next one!</h2>\
+                `;
+            }
+            console.log('sequence: ', sequence.join(''));
+        });
+    </script>
+</body>
+
+</html>

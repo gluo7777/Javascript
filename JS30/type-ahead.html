@@ -36,7 +36,7 @@
             .catch(error => log('Received error: ', error));
 
         // configure listeners
-        document.querySelector('.search').addEventListener('keyup', event => {
+        document.querySelector('.search').addEventListener('keyup', debounce((event) => {
             const i = event.target;
             log('Input: ', i.value);
             if (!i.value || i.value === '') {
@@ -44,7 +44,7 @@
             } else {
                 searchAndDisplay(i.value);
             }
-        });
+        }, 1000));
 
         // helper functions
         function searchAndDisplay(search) {
@@ -61,6 +61,28 @@
         function highlight(text, match) {
             return text.replace(new RegExp(match, 'gi'), `<span class="hl">${match}</span>`);
         }
+
+        function debounce(func, wait, immediate) {
+            var timeout;
+
+            return function executedFunction() {
+                var context = this;
+                var args = arguments;
+
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+
+                var callNow = immediate && !timeout;
+
+                clearTimeout(timeout);
+
+                timeout = setTimeout(later, wait);
+
+                if (callNow) func.apply(context, args);
+            };
+        };
 
     </script>
 </body>
